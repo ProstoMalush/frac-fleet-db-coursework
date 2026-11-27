@@ -1,0 +1,120 @@
+erDiagram
+    OIL_FIELD ||--|{ WELL : contains
+    WELL ||--o{ WELL_REPAIR : has
+    FRAC_FLEET ||--o{ WELL_REPAIR : performs
+    CREW ||--o{ WELL_REPAIR : responsible_for
+    REPAIR_TYPE ||--o{ WELL_REPAIR : classifies
+    WELL_REPAIR ||--|{ REPAIR_STAGE : consists_of
+    REPAIR_STAGE ||--o{ TELEMETRY_MEASUREMENT : records
+    EQUIPMENT_TYPE ||--o{ EQUIPMENT_UNIT : classifies
+    FRAC_FLEET ||--o{ FLEET_UNIT_ASSIGNMENT : includes_over_time
+    EQUIPMENT_UNIT ||--o{ FLEET_UNIT_ASSIGNMENT : assigned_over_time
+    EQUIPMENT_UNIT ||--o{ EQUIPMENT_MAINTENANCE : receives
+
+    OIL_FIELD {
+        bigint oil_field_id PK
+        varchar field_code UK
+        varchar field_name
+        varchar region_name
+        text description
+    }
+    WELL {
+        bigint well_id PK
+        bigint oil_field_id FK
+        varchar well_code
+        varchar well_type
+        varchar well_status
+        date commissioning_date
+        numeric design_depth_m
+    }
+    FRAC_FLEET {
+        bigint frac_fleet_id PK
+        varchar fleet_code UK
+        varchar fleet_name
+        varchar fleet_status
+        numeric max_operating_pressure_mpa
+        varchar base_location
+    }
+    EQUIPMENT_TYPE {
+        bigint equipment_type_id PK
+        varchar type_code UK
+        varchar type_name
+        varchar category
+        text description
+    }
+    EQUIPMENT_UNIT {
+        bigint equipment_unit_id PK
+        bigint equipment_type_id FK
+        varchar equipment_code UK
+        varchar serial_number UK
+        varchar manufacturer
+        varchar model_name
+        smallint manufacture_year
+        date commissioning_date
+        varchar technical_status
+    }
+    FLEET_UNIT_ASSIGNMENT {
+        bigint assignment_id PK
+        bigint frac_fleet_id FK
+        bigint equipment_unit_id FK
+        timestamptz assigned_at
+        timestamptz released_at
+        varchar assignment_reason
+    }
+    CREW {
+        bigint crew_id PK
+        varchar crew_code UK
+        varchar crew_name
+        varchar specialization
+        varchar crew_status
+    }
+    REPAIR_TYPE {
+        bigint repair_type_id PK
+        varchar repair_type_code UK
+        varchar type_name
+        text description
+        numeric planned_duration_hours
+    }
+    WELL_REPAIR {
+        bigint repair_id PK
+        varchar repair_code UK
+        bigint well_id FK
+        bigint frac_fleet_id FK
+        bigint crew_id FK
+        bigint repair_type_id FK
+        timestamptz planned_start_at
+        timestamptz planned_end_at
+        timestamptz actual_start_at
+        timestamptz actual_end_at
+        varchar repair_status
+        text result_description
+    }
+    REPAIR_STAGE {
+        bigint repair_stage_id PK
+        bigint repair_id FK
+        smallint stage_number
+        varchar stage_name
+        varchar stage_status
+        timestamptz started_at
+        timestamptz ended_at
+    }
+    TELEMETRY_MEASUREMENT {
+        bigint measurement_id PK
+        bigint repair_stage_id FK
+        timestamptz measured_at
+        numeric pressure_mpa
+        numeric fluid_rate_m3_min
+        numeric proppant_concentration_kg_m3
+        numeric cumulative_fluid_volume_m3
+        numeric cumulative_proppant_mass_t
+    }
+    EQUIPMENT_MAINTENANCE {
+        bigint maintenance_id PK
+        bigint equipment_unit_id FK
+        varchar maintenance_type
+        varchar maintenance_status
+        timestamptz started_at
+        timestamptz ended_at
+        date next_due_date
+        text description
+    }

@@ -1,0 +1,41 @@
+flowchart LR
+  subgraph CORE["Предметная область 1: frac_core — флоты ГРП и ремонты"]
+    F[oil_field] --> W[well]
+    FF[frac_fleet] --> WR[well_repair]
+    W --> WR
+    RT[repair_type] --> WR
+    C[crew] --> WR
+    WR --> RS[repair_stage]
+    RS --> TM[telemetry_measurement]
+    FF --> EUA[fleet_unit_assignment]
+    EU[equipment_unit] --> EUA
+    EU --> EM[equipment_maintenance]
+  end
+  subgraph PARTNER["Предметная область 2: partner_1 — замеры по скважинам"]
+    PF[source_field] --> PW[source_well]
+    PW --> MS[measurement_session]
+    MP[measurement_parameter] --> WM[well_measurement]
+    MS --> WM
+    MM[measurement_method] --> MS
+    MD[measuring_device] --> MS
+    OP[measurement_operator] --> MS
+  end
+  subgraph MART["Общий аналитический слой: frac_mart"]
+    FACT[fact_well_repair]
+    DD[dim_date]
+    DF[dim_field / SCD-2]
+    DRT[dim_repair_type]
+    XW[v_partner_1_well_crosswalk]
+    RV[v_repair_with_partner_well_measurements]
+    QV[v_quarterly_repairs_with_well_measurements]
+    DD --> FACT
+    DF --> FACT
+    DRT --> FACT
+    FACT --> RV
+    XW --> RV
+    RV --> QV
+  end
+  WR --> FACT
+  CORE -. "field_code + well_code" .-> XW
+  PARTNER -. "field_code + well_code" .-> XW
+  MS --> RV

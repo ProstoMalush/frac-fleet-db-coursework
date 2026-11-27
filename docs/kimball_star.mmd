@@ -1,0 +1,47 @@
+erDiagram
+    DIM_DATE ||--o{ FACT_WELL_REPAIR : "date_key"
+    DIM_FIELD ||--o{ FACT_WELL_REPAIR : "field_key (SCD-2)"
+    DIM_REPAIR_TYPE ||--o{ FACT_WELL_REPAIR : "repair_type_key"
+
+    DIM_DATE {
+        int date_key PK
+        date full_date
+        smallint calendar_year
+        smallint quarter_number
+        smallint month_number
+        boolean is_weekend
+    }
+
+    DIM_FIELD {
+        bigint field_key PK
+        bigint source_oil_field_id
+        varchar field_code
+        varchar field_name
+        varchar region_name
+        date valid_from
+        date valid_to
+        boolean is_current
+    }
+
+    DIM_REPAIR_TYPE {
+        bigint repair_type_key PK
+        bigint source_repair_type_id
+        varchar repair_type_code
+        varchar type_name
+    }
+
+    FACT_WELL_REPAIR {
+        bigint fact_repair_key PK
+        bigint source_repair_id
+        int date_key FK
+        bigint field_key FK
+        bigint repair_type_key FK
+        varchar repair_code
+        varchar well_code
+        varchar fleet_code
+        numeric actual_duration_hours
+        numeric avg_pressure_mpa
+        numeric max_pressure_mpa
+        numeric total_fluid_volume_m3
+        numeric total_proppant_mass_t
+    }

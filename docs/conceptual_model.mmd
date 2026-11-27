@@ -1,0 +1,14 @@
+erDiagram
+    OIL_FIELD ||--o{ WELL : "содержит"
+    WELL ||--o{ WELL_REPAIR : "имеет ремонты"
+    FRAC_FLEET ||--o{ WELL_REPAIR : "выполняет"
+    CREW ||--o{ WELL_REPAIR : "обслуживает"
+    REPAIR_TYPE ||--o{ WELL_REPAIR : "классифицирует"
+
+    WELL_REPAIR ||--o{ REPAIR_STAGE : "состоит из"
+    REPAIR_STAGE ||--o{ TELEMETRY_MEASUREMENT : "имеет измерения"
+
+    EQUIPMENT_TYPE ||--o{ EQUIPMENT_UNIT : "определяет тип"
+    FRAC_FLEET ||--o{ FLEET_UNIT_ASSIGNMENT : "комплектуется"
+    EQUIPMENT_UNIT ||--o{ FLEET_UNIT_ASSIGNMENT : "назначается"
+    EQUIPMENT_UNIT ||--o{ EQUIPMENT_MAINTENANCE : "обслуживается"

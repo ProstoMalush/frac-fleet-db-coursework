@@ -1,0 +1,65 @@
+erDiagram
+    SOURCE_FIELD ||--o{ SOURCE_WELL : contains
+    SOURCE_WELL ||--o{ MEASUREMENT_SESSION : has
+    MEASUREMENT_METHOD ||--o{ MEASUREMENT_SESSION : uses
+    MEASURING_DEVICE ||--o{ MEASUREMENT_SESSION : performed_with
+    MEASUREMENT_OPERATOR ||--o{ MEASUREMENT_SESSION : performed_by
+    MEASUREMENT_SESSION ||--|{ WELL_MEASUREMENT : records
+    MEASUREMENT_PARAMETER ||--o{ WELL_MEASUREMENT : describes
+
+    SOURCE_FIELD {
+        bigint source_field_id PK
+        varchar field_code UK
+        varchar field_name
+        varchar region_name
+    }
+    SOURCE_WELL {
+        bigint source_well_id PK
+        bigint source_field_id FK
+        varchar well_code
+        varchar well_type
+        varchar well_status
+    }
+    MEASUREMENT_PARAMETER {
+        bigint parameter_id PK
+        varchar parameter_code UK
+        varchar parameter_name
+        varchar unit_name
+        numeric min_value
+        numeric max_value
+    }
+    MEASUREMENT_METHOD {
+        bigint method_id PK
+        varchar method_code UK
+        varchar method_name
+    }
+    MEASURING_DEVICE {
+        bigint device_id PK
+        varchar device_code UK
+        varchar serial_number UK
+        date calibration_date
+        date next_calibration_date
+    }
+    MEASUREMENT_OPERATOR {
+        bigint operator_id PK
+        varchar operator_code UK
+        varchar operator_name
+        varchar qualification
+    }
+    MEASUREMENT_SESSION {
+        bigint session_id PK
+        varchar session_code UK
+        bigint source_well_id FK
+        bigint method_id FK
+        bigint device_id FK
+        bigint operator_id FK
+        timestamptz measured_at
+        varchar quality_status
+    }
+    WELL_MEASUREMENT {
+        bigint measurement_id PK
+        bigint session_id FK
+        bigint parameter_id FK
+        numeric measured_value
+        varchar quality_flag
+    }

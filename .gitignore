@@ -1,0 +1,18 @@
+# Secrets
+.env
+*.pem
+*.key
+
+# Local/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Database dumps and local artifacts
+*.dump
+*.backup
+*.bak
+*.sql.gz
+*.csv
